@@ -25,10 +25,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
     const craftCollection =client.db('addCraftDB').collection('crafts');
+    // const userCollection = client.db('addCraftDB').collection('user');
+    const subcategoryCollection = client.db('addCraftDB').collection('subcategory');
 
     app.get('/add-craft',async(req,res)=>{
       const cursor = craftCollection.find();
@@ -51,8 +52,6 @@ async function run() {
       const updatedCraft = req.body;
       const craft ={
         $set :{
-          name : updatedCraft.name,
-          email : updatedCraft.email,
           itemName : updatedCraft.itemName,
           image : updatedCraft.image,
           subcategoryName : updatedCraft.subcategoryName,
@@ -80,6 +79,29 @@ async function run() {
       const result = await craftCollection.deleteOne(query)
       res.send(result);
     })
+
+    //  subcategory related APIs
+    app.get('/subcategory',async(req,res)=>{
+      const cursor = subcategoryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    app.post('/subcategory',async(req,res)=>{
+      const subcategory = req.body;
+      const result = await subcategoryCollection.insertOne(subcategory);
+      res.send(result);
+    });
+
+
+
+    // user related APIs
+
+    // app.post('/user',async(req,res)=>{
+    //   const user = req.body;
+    //   console.log(user);
+    //   const result = await userCollection.insertOne(user);
+    //   res.send(result);
+    // });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
