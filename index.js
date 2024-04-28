@@ -36,6 +36,38 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/add-craft/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await craftCollection.findOne(query)
+      res.send(result);
+    })
+
+
+    app.put('/add-craft/:id',async(req,res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert : true};
+      const updatedCraft = req.body;
+      const craft ={
+        $set :{
+          name : updatedCraft.name,
+          email : updatedCraft.email,
+          itemName : updatedCraft.itemName,
+          image : updatedCraft.image,
+          subcategoryName : updatedCraft.subcategoryName,
+          description : updatedCraft.description,
+          price : updatedCraft.price,
+          rating : updatedCraft.rating,
+          customization : updatedCraft.customization,
+          time : updatedCraft.time,
+          stock : updatedCraft.stock 
+        }
+      }
+      const result = await craftCollection.updateOne(filter,craft,options)
+      res.send(result);
+    })
+
     app.post('/add-craft',async(req , res)=>{
       const newCraft = req.body;
       const result = await craftCollection.insertOne(newCraft);
