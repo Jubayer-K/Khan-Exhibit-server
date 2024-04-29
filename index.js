@@ -49,6 +49,18 @@ async function run() {
       const result = await craftCollection.find({ email: req.params.email }).toArray();
       res.send(result)
     })
+
+    app.get('/crafts-by-category', async (req, res) => {
+      try {
+        const category = req.query.category;
+        const query = { subcategoryName: category };
+        const result = await craftCollection.find(query).toArray();
+        res.json(result);
+      } catch (error) {
+        console.error('Error fetching data by category:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
    
     app.put('/add-craft/:id',async(req,res)=>{
       const id = req.params.id;
@@ -86,6 +98,7 @@ async function run() {
     })
 
     //  subcategory related APIs
+
     app.get('/subcategory',async(req,res)=>{
       const cursor = subcategoryCollection.find();
       const result = await cursor.toArray();
