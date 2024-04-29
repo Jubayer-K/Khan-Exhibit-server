@@ -25,7 +25,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
 
     const craftCollection =client.db('addCraftDB').collection('crafts');
     // const userCollection = client.db('addCraftDB').collection('user');
